@@ -12,8 +12,19 @@ const ballRadius = 3;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 //velocidad de la pelota
-let dx = 2;
-let dy = -2;
+let dx = 3;
+let dy = -3;
+//Variables de la paleta
+const paddleHight = 10;
+const paddlewidth = 50;
+
+let paddleX = (canvas.width - paddlewidth) / 2;
+let paddleY = canvas.height - paddleHight - 10;
+
+let rightPressed = false;
+let leftPressed = false;
+
+const DADDLE_SENSIBILITY = 8;
 
 function drawBall() {
   ctx.beginPath();
@@ -22,7 +33,14 @@ function drawBall() {
   ctx.fill();
   ctx.closePath();
 }
-function drawPaddle() {}
+function drawPaddle() {
+  ctx.fillRect(
+    paddleX, //la coordenada x
+    paddleY, //la coordenada Y
+    paddlewidth, //el ancho del dibujo
+    paddleHight //el alto del dibujo
+  );
+}
 function drawBricks() {}
 
 function collisionDetection() {}
@@ -49,10 +67,38 @@ function ballMovement() {
   x += dx;
   y += dy;
 }
-function paddleMovement() {}
+function paddleMovement() {
+  if (rightPressed && paddleX < canvas.width - paddlewidth) {
+    paddleX += DADDLE_SENSIBILITY;
+  } else if (leftPressed && paddleX > 0) {
+    paddleX -= DADDLE_SENSIBILITY;
+  }
+}
 
 function cleanCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function initEvent() {
+  document.addEventListener("keydown", keyDownHandler);
+  document.addEventListener("keyup", keyUpHandler);
+
+  function keyDownHandler(event) {
+    const { key } = event;
+    if (key === "right" || key === "ArrowRight") {
+      rightPressed = true;
+    } else if (key === "Left" || key === "ArrowLeft") {
+      leftPressed = true;
+    }
+  }
+  function keyUpHandler(event) {
+    const { key } = event;
+    if (key === "right" || key === "ArrowRight") {
+      rightPressed = false;
+    } else if (key === "Left" || key === "ArrowLeft") {
+      leftPressed = false;
+    }
+  }
 }
 
 function draw() {
@@ -71,3 +117,4 @@ function draw() {
 }
 
 draw();
+initEvent();
