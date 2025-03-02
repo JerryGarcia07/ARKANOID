@@ -53,7 +53,14 @@ function ballMovement() {
     dx = -dx;
   }
   //rebotar en la parte de arriba
-  if (y + dy < ballRadius) {
+  const isBallSameXAsPaddle = x > paddleX && x < paddleX + paddlewidth;
+
+  const isBallTouchingPaddle = y + dy > paddleY;
+  if (isBallSameXAsPaddle && isBallTouchingPaddle) {
+    dy = -dy; //cambia la direccion de la pelota
+  }
+  //la pelto toca el suela
+  else if (y + dy < ballRadius) {
     dy = -dy;
   }
 
