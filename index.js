@@ -1,6 +1,9 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+const $sprite = document.querySelector("#sprite");
+const $brickes = document.querySelector("#bricks");
+
 canvas.width = 440;
 canvas.height = 512;
 
@@ -34,11 +37,16 @@ function drawBall() {
   ctx.closePath();
 }
 function drawPaddle() {
-  ctx.fillRect(
-    paddleX, //la coordenada x
-    paddleY, //la coordenada Y
-    paddlewidth, //el ancho del dibujo
-    paddleHight //el alto del dibujo
+  ctx.drawImage(
+    $sprite, //imagen
+    29, //clicx: donde empieza a recortar
+    174, //clicY: donde empiesa a recortar
+    paddlewidth, //el tamaño del recorte
+    paddleHight, //tamaño del recorte
+    paddleX, //posicion x del dibujo
+    paddleY, //posicion y del dibujo
+    paddlewidth, //ancho del dibujo
+    paddleHight //elto del dibujo
   );
 }
 function drawBricks() {}
