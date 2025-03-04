@@ -27,6 +27,40 @@ let paddleY = canvas.height - paddleHight - 10;
 let rightPressed = false;
 let leftPressed = false;
 
+//variables de los ladrillos
+const brickRowCount = 6;
+const brickCollumnCount = 13;
+const brickWitdht = 30;
+const brickHeight = 14;
+const brickPadding = 0;
+const brickOffsetTop = 80;
+const brickOffsetLeft = 16;
+const bricks = [];
+
+const BRICK_STATUS = {
+  ACTIVE: 1,
+  DESTROY: 0,
+};
+
+for (let c = 0; c < brickCollumnCount; c++) {
+  bricks[c] = []; //inicializamos con un array vacio
+  for (let r = 0; r < brickRowCount; r++) {
+    //calculamos la posicion del ladrillo en la pantalla
+    const brickX = c * (brickWitdht + brickPadding) + brickOffsetLeft;
+    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+    //asignar un color aletorio a cada ladrillo
+    const random = Math.floor(Math.random() * 8);
+    //este truquilla es bastante importante que los tengas en la memoria
+    //guarda la impormacion de cada ladrillo
+    bricks[c][r] = {
+      x: brickX,
+      y: brickY,
+      status: BRICK_STATUS.ACTIVE,
+      color: random,
+    };
+  }
+}
+
 const DADDLE_SENSIBILITY = 8;
 
 function drawBall() {
@@ -49,9 +83,48 @@ function drawPaddle() {
     paddleHight //elto del dibujo
   );
 }
-function drawBricks() {}
+function drawBricks() {
+  for (let c = 0; c < brickCollumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const currentBrick = bricks[c][r];
+      if (currentBrick.status === BRICK_STATUS.DESTROY) continue;
 
-function collisionDetection() {}
+      // ctx.fillStyle = "yellow";
+      // ctx.rect(currentBrick.x, currentBrick.y, brickWitdht, brickHeight);
+      // ctx.stroke();
+      // ctx.fill();
+      const clickX = currentBrick.color * 32;
+      ctx.drawImage(
+        $brickes,
+        clickX,
+        0,
+        31,
+        14,
+        currentBrick.x,
+        currentBrick.y,
+        brickWitdht,
+        brickHeight
+      );
+    }
+  }
+}
+
+function collisionDetection() {
+  for (let c = 0; c < brickCollumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const currentBrick = bricks[c][r];
+      if (currentBrick.status === BRICK_STATUS.DESTROY) continue;
+      const isBallSameXAsBrick =
+        x > currentBrick.x && x < currentBrick.x + paddlewidth;
+      const isBallSameYAsBrick =
+        y > currentBrick.y && y < currentBrick.y + paddleHight;
+      if (isBallSameXAsBrick && isBallSameYAsBrick) {
+        dy = -dy;
+        currentBrick.status = BRICK_STATUS.DESTROY;
+      }
+    }
+  }
+}
 function ballMovement() {
   //rebotar las pelotas en los laterales
   if (
